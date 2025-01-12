@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fdfdfd;
+            color: rgb(0, 0, 0);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 12px;
+            font-size: 1em;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            background-color: #32f9d8;
+            color: rgb(0, 0, 0);
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #aa5214;
+        }
+        .weather-info {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+        }
+        .weather-info h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        .weather-info p {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Weather App</h1>
+        <input type="text" id="cityInput" placeholder="Enter city name">
+        <button onclick="getWeather()">Get Weather</button>
+
+        <div class="weather-info" id="weatherInfo"></div>
+    </div>
+
+    <script>
+        async function getWeather() {
+            const city = document.getElementById('cityInput').value;
+            const apiKey = 'f64102839b3480bff7e8fd05c69c3efe';  // Your WeatherStack API Key
+            const apiUrl = `http://api.weatherstack.com/current?access_key=${apiKey}&query=${city}`;
+
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (data.success !== false) {
+                const weather = data.current.weather_descriptions[0];
+                const temp = data.current.temperature;
+                const humidity = data.current.humidity;
+
+                document.getElementById('weatherInfo').innerHTML = `
+                    <h3>Weather in ${city}</h3>
+                    <p>Temperature: ${temp}°C</p>
+                    <p>Humidity: ${humidity}%</p>
+                    <p>Description: ${weather}</p>
+                `;
+            } else {
+                document.getElementById('weatherInfo').innerHTML = `<p>City not found!</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
